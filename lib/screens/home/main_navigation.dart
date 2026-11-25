@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../../constants/app_colors.dart';
+import '../../widgets/custom_bottom_navbar.dart';
+
 import 'home_screen.dart';
 import '../discovery/discovery_screen.dart';
 import '../likes/likes_screen.dart';
@@ -25,53 +28,32 @@ class _MainNavigationState extends State<MainNavigation> {
     const ProfileScreen(),
   ];
 
+  void changePage(int index) {
+    if (index < 0 || index >= pages.length) return;
+
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: pages,
+      backgroundColor: AppColors.background,
+
+      // Menampilkan halaman sesuai menu yang dipilih.
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(
+          index: selectedIndex,
+          children: pages,
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+
+      // Navigasi utama lima menu.
+      bottomNavigationBar: CustomBottomNavBar(
         currentIndex: selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFFFFC629),
-        unselectedItemColor: Colors.grey,
-
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore),
-            label: 'Discover',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Likes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            activeIcon: Icon(Icons.chat_bubble),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+        onTap: changePage,
       ),
     );
   }
