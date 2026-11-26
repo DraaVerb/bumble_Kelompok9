@@ -84,10 +84,13 @@ class _LikesScreenState extends State<LikesScreen> {
 
                   final colorValue =
                       (profile['color'] as num?)?.toInt() ??
-                      0xFFFFD6C9;
+                          0xFFFFD6C9;
 
                   final interests =
                       (profile['interests'] as List?) ?? [];
+
+                  final imagePath =
+                      profile['image']?.toString() ?? '';
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 16),
@@ -100,24 +103,52 @@ class _LikesScreenState extends State<LikesScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          Container(
-                            width: 85,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Color(colorValue),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: Text(
-                                profile['emoji'] ?? '💛',
-                                style: const TextStyle(fontSize: 42),
-                              ),
+                          // FOTO PROFIL
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: SizedBox(
+                              width: 85,
+                              height: 100,
+                              child: imagePath.isNotEmpty
+                                  ? Image.asset(
+                                      imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          color: Color(colorValue),
+                                          child: Center(
+                                            child: Text(
+                                              profile['emoji'] ?? '💛',
+                                              style: const TextStyle(
+                                                fontSize: 42,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : Container(
+                                      color: Color(colorValue),
+                                      child: Center(
+                                        child: Text(
+                                          profile['emoji'] ?? '💛',
+                                          style: const TextStyle(
+                                            fontSize: 42,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                             ),
                           ),
+
                           const SizedBox(width: 15),
+
+                          // INFORMASI PROFIL
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   '${profile['name']}, ${profile['age']}',
@@ -126,7 +157,9 @@ class _LikesScreenState extends State<LikesScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+
                                 const SizedBox(height: 5),
+
                                 Text(
                                   profile['location'] ?? '',
                                   style: const TextStyle(
@@ -134,14 +167,18 @@ class _LikesScreenState extends State<LikesScreen> {
                                     fontSize: 12,
                                   ),
                                 ),
+
                                 const SizedBox(height: 7),
+
                                 Text(
                                   profile['bio'] ?? '',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(fontSize: 12),
                                 ),
+
                                 const SizedBox(height: 8),
+
                                 Wrap(
                                   spacing: 5,
                                   children: interests
@@ -166,6 +203,8 @@ class _LikesScreenState extends State<LikesScreen> {
                               ],
                             ),
                           ),
+
+                          // HAPUS LIKE
                           IconButton(
                             tooltip: 'Remove Like',
                             onPressed: () async {
