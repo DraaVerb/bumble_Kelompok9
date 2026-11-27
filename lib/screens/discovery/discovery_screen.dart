@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import '../profile/detail_profile_screen.dart';
 import '../../services/likes_service.dart';
 import '../../services/pass_service.dart';
 
@@ -303,6 +305,28 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
     );
   }
 
+  // ================= DETAIL PROFILE =================
+  void openDetailProfile(Map<String, dynamic> profile) {
+    if (isProcessing) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => DetailProfileScreen(
+          profile: profile,
+          onLike: () {
+            Navigator.pop(context);
+            nextProfile('like');
+          },
+          onPass: () {
+            Navigator.pop(context);
+            nextProfile('pass');
+          },
+        ),
+      ),
+    );
+  }
+
   // ================= RESET FILTER =================
   void resetFilters() {
     setState(() {
@@ -314,7 +338,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
       lastActionWasPass = false;
     });
   }
-    // ================= TAMPILAN UTAMA =================
+
+  // ================= TAMPILAN UTAMA =================
   @override
   Widget build(BuildContext context) {
     final visibleProfiles = filteredProfiles;
@@ -486,6 +511,11 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
                         child: Column(
                           children: [
                             GestureDetector(
+                              onTap: () {
+                                openDetailProfile(
+                                  visibleProfiles[currentIndex],
+                                );
+                              },
                               onHorizontalDragUpdate: (details) {
                                 if (isProcessing) return;
                                 setState(() {
@@ -752,7 +782,8 @@ class _DiscoveryScreenState extends State<DiscoveryScreen> {
       ),
     );
   }
-    // ================= RIWAYAT PASS =================
+
+  // ================= RIWAYAT PASS =================
   Future<void> showPassHistory() async {
     await PassService.loadPasses();
 
