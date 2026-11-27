@@ -26,5 +26,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  # Konfigurasi assets aplikasi
   assets:
     - asset/images/
+
+  # Konfigurasi custom fonts dapat ditambahkan di sini.
